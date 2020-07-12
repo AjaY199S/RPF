@@ -1,14 +1,19 @@
 import React from "react";
-import Login from "../Login/Login";
-import Home from "../Home/Home";
+import Header from "../Header/Navbar";
+// import Login from "../Login/Login";
+// import Home from "../Home/Home";
+// import Coustumer from "../Coustumers/Coustumer";
+import Bill from "../Billing/Bill";
 
 class Main extends React.Component {
   render() {
     return (
-      <div className="text-center">
-        <h1>Welcome to RPF</h1>
-        <Login></Login>
+      <div>
+        <Header />
+        {/* <Login></Login> */}
         {/* <Home></Home> */}
+        {/* <Coustumer></Coustumer> */}
+        <Bill></Bill>
       </div>
     );
   }
