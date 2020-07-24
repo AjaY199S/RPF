@@ -7,11 +7,13 @@ import {
   IconButton,
 } from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
+import Wight from "./Weight";
 
 function Bill() {
   const [values, setValues] = React.useState({
-    name: "",
-    mobileNo: "",
+    billNo: "202007180001",
+    name: "Ajay",
+    mobileNo: "9009410700",
     place: "",
     rate: "",
     showRate: false,
@@ -49,7 +51,7 @@ function Bill() {
   };
   return (
     <div>
-      <Container className="mt-3">
+      <Container className="mt-3 mr-2 ml-2" fluid="true">
         <Row>
           <Col>
             <Breadcrumb>
@@ -70,7 +72,7 @@ function Bill() {
                 label="Bill No."
                 type="number"
                 variant="outlined"
-                value="202007130001"
+                value={values.billNo}
                 InputProps={{
                   readOnly: true,
                 }}
@@ -81,7 +83,7 @@ function Bill() {
                 label="Name"
                 type="name"
                 variant="outlined"
-                value="Ajay"
+                value={values.name}
                 InputProps={{
                   readOnly: true,
                 }}
@@ -92,7 +94,7 @@ function Bill() {
                 label="Mobile No."
                 type="number"
                 variant="outlined"
-                value="1245"
+                value={values.mobileNo}
                 InputProps={{
                   readOnly: true,
                 }}
@@ -104,7 +106,7 @@ function Bill() {
                 label="Billing Rate (In Rs.)"
                 type={values.showRate ? "text" : "password"}
                 variant="outlined"
-                value="213"
+                value={values.rate}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="start">
@@ -158,6 +160,9 @@ function Bill() {
             <hr />
             <hr />
           </Col>
+        </Row>
+        <Row sm={12}>
+          <Wight></Wight>
         </Row>
       </Container>
     </div>

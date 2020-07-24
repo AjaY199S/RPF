@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Container,
   Typography,
   FormControl,
   TextField,
@@ -8,18 +7,26 @@ import {
   IconButton,
   Button,
 } from "@material-ui/core";
+import { Container, Row, Col } from "react-bootstrap";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
+
 import LoginService from "./LoginService";
-import Respo from "../../Contants/Respo";
+// import Respo from "../../Contants/Respo";
+import {
+  mobileNoValidation,
+  passwordValidation,
+} from "../../Contants/Validation";
 
 function Login() {
   const [values, setValues] = React.useState({
     mobileNo: "",
     password: "",
     showPassword: false,
+    buttonActive: false,
   });
 
   const [errors, setErrors] = React.useState({
+    feildName: "",
     action: false,
     msg: "",
   });
@@ -29,36 +36,51 @@ function Login() {
   };
   const handleOnChange = (event) => {
     if (event.target.id === "mobileNo") {
-      if (event.target.value.length === 10) {
-        setValues({ ...values, mobileNo: event.target.value });
-      }
+      mobileNoValidation(event.target.value).then((res) => {
+        setErrors({
+          feildName: "mobileNo",
+          action: res.Error,
+          msg: res.msg,
+        });
+      });
+      setValues({ ...values, mobileNo: event.target.value });
     } else if (event.target.id === "password") {
+      passwordValidation(event.target.value).then((res) => {
+        setErrors({
+          feildName: "password",
+          action: res.Error,
+          msg: res.msg,
+        });
+      });
       setValues({ ...values, password: event.target.value });
     }
   };
 
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
   const handleSubmit = (e) => {
     try {
-      if (values.mobileNo !== "" && values.password !== "") {
-        setErrors({ ...errors, action: !errors.action });
-        console.log("login Info", values);
-        console.log("Respo msg", Respo.WORNG_MOBILE_AND_PASSWORD);
-
-        LoginService(values);
-      } else {
-        setErrors({
-          action: !errors.action,
-          msg: "Please fill mobile no and password.",
+      mobileNoValidation(values.mobileNo).then((mres) => {
+        passwordValidation(values.password).then((pres) => {
+          if (!mres.Error && !pres.Error) {
+            let userData = {
+              mobileNo: values.mobileNo,
+              password: values.password,
+            };
+            LoginService(userData);
+          } else {
+            setErrors({
+              feildName: "mobileNo",
+              action: mres.Error,
+              msg: mres.msg,
+            });
+            setErrors({
+              feildName: "password",
+              action: pres.Error,
+              msg: pres.msg,
+            });
+          }
         });
-        console.log(
-          "Please fill mobile no and password.",
-          values.mobileNo !== ""
-        );
-      }
+      });
+      console.log("Login Info", values);
     } catch (error) {
       console.log("Error", error);
     }
@@ -66,61 +88,71 @@ function Login() {
 
   return (
     <div>
-      <Container maxWidth="sm">
-        <Typography variant="h4" align="center" color="textSecondary">
-          Welcome to RPF
-        </Typography>
-        <FormControl>
-          {errors.action ? (
-            <div className="alert alert-danger">
-              <strong>Warning!</strong> {errors.msg}
-            </div>
-          ) : (
-            ""
-          )}
+      <Container>
+        <Row>
+          <Col lg={4} md={3}></Col>
+          <Col lg={4} md={6} className=" center mt-5 mb-5">
+            <Typography variant="h4" align="center" color="textSecondary">
+              Welcome to RPF
+            </Typography>
+          </Col>
+          <Col lg={4} md={3}></Col>
+        </Row>
+        <Row>
+          <Col lg={4} md={3}></Col>
+          <Col lg={4} md={6} className="center">
+            <FormControl fullWidth={true}>
+              <TextField
+                margin="normal"
+                id="mobileNo"
+                label="Mobile No."
+                type="number"
+                variant="outlined"
+                onChange={handleOnChange}
+                error={errors.feildName === "mobileNo" ? errors.action : false}
+                helperText={errors.feildName === "mobileNo" ? errors.msg : ""}
+                required
+              />
+              <TextField
+                margin="normal"
+                id="password"
+                label="Password"
+                type={values.showPassword ? "text" : "password"}
+                onChange={handleOnChange}
+                error={errors.feildName === "password" ? errors.action : false}
+                helperText={errors.feildName === "password" ? errors.msg : ""}
+                variant="outlined"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="start">
+                      <IconButton onClick={handleClickShowPassword} edge="end">
+                        {values.showPassword ? (
+                          <Visibility />
+                        ) : (
+                          <VisibilityOff />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                required
+              />
 
-          <TextField
-            margin="normal"
-            id="mobileNo"
-            label="Mobile No."
-            type="number"
-            variant="outlined"
-            onChange={handleOnChange}
-            required
-          />
-          <TextField
-            margin="normal"
-            id="password"
-            label="Password"
-            type={values.showPassword ? "text" : "password"}
-            onChange={handleOnChange}
-            autoComplete="current-password"
-            variant="outlined"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="start">
-                  <IconButton
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            required
-          />
-
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-            onClick={handleSubmit}
-          >
-            Log In
-          </Button>
-        </FormControl>
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                className="mt-3 "
+                size="large"
+                // disabled={errors.action}
+                onClick={handleSubmit}
+              >
+                Log In
+              </Button>
+            </FormControl>
+          </Col>
+          <Col lg={4} md={3}></Col>
+        </Row>
       </Container>
     </div>
   );

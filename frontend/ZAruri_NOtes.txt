@@ -1,0 +1,17 @@
+Login Component Complete.
+moblie and password valiadation.
+JWT service used in project.
+Private Routing.
+
+VALIDATION SCHEMA :-
+
+FOR Mobile Number :-
+1. type set = Number
+2. Lenth = 10 
+3. Not empty = ""
+
+For Passsword :-
+1. Not Empty = ""
+2. Lenght = min 8
+3. type set = string
+4. numer + alphsabest + lower uper case + special charector

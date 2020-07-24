@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "../Header/Navbar";
-// import Login from "../Login/Login";
+import Login from "../Login/Login";
 // import Home from "../Home/Home";
 // import Coustumer from "../Coustumers/Coustumer";
 import Bill from "../Billing/Bill";
@@ -10,10 +10,10 @@ class Main extends React.Component {
     return (
       <div>
         <Header />
-        {/* <Login></Login> */}
+        <Login></Login>
         {/* <Home></Home> */}
         {/* <Coustumer></Coustumer> */}
-        <Bill></Bill>
+        {/* <Bill></Bill> */}
       </div>
     );
   }
